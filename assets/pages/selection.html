@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<link rel="apple-touch-icon" sizes="76x76" href="../img/logo.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="../img/logo.png">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+		<!-- Core JS -->
+		<script src="../js/jquery-1.11.3.min.js"></script>
+		<script src="../js/bootstrap.min.js" type="text/javascript"></script>
+
+    <!-- Paper Dashboard Core javascript and methods for Demo purpose -->
+		<script src="../js/paper-dashboard.js"></script>
+		<script src="../js/cacheJS.js"></script>
+
+		<!-- Custom JS to retrieve and reset Data -->
+		<script src="../js/data.js"></script>
+
+	<title>Performance Management Dashboard</title>
+
+		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+		<!-- JQuery Mobile core CSS -->
+		<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
+
+    <!-- Bootstrap core CSS     -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Animation library for notifications   -->
+    <link href="../css/animate.min.css" rel="stylesheet"/>
+
+    <!--  Paper Dashboard core CSS    -->
+    <link href="../css/paper-dashboard.css" rel="stylesheet"/>
+
+    <link href="../css/dashboard.css" rel="stylesheet" />
+
+    <!--  Fonts and icons     -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
+    <link href="../css/themify-icons.css" rel="stylesheet">
+
+		<!-- Settings -->
+		<script src="../../settings.js" type="text/javascript"></script>
+
+		<script>
+			$(document).ready(function(){
+				var events_base = settings.events_base;
+				data.setUpcomingEvents(events_base);
+
+				var m = cacheJS.get("data");
+				if(m === null) {
+					window.location.href='../../index.html';
+				}
+
+				data.selectionContent(m);
+
+				// Select All Goals
+				$("#selectall").click(function(){
+						$( "input[type='checkbox']" ).prop("checked",true);
+						$( ".goalcheck" ).checkboxradio( "refresh" );
+						$(".measuring").css("box-shadow","0 0 12px #38c");
+						$(".ontarget").css("box-shadow","0 0 12px #38c");
+						$(".offtarget").css("box-shadow","0 0 12px #38c");
+						$(".department").css("box-shadow","0 0 12px #38c");
+						$(".strategic").css("box-shadow","0 0 12px #38c");
+
+						$('.strategic').buttonMarkup({ icon: "minus" });
+						$('.department').buttonMarkup({ icon: "minus" });
+						$('.offtarget').buttonMarkup({ icon: "minus" });
+						$('.ontarget').buttonMarkup({ icon: "minus" });
+						$('.measuring').buttonMarkup({ icon: "minus" });
+
+						o_selected = true;
+						d_selected = true;
+						m_selected = true;
+						of_selected = true;
+						s_selected = true;
+				});
+				// Deselect all goals
+				$("#selectsubset").click(function(){
+						$( "input[type='checkbox']" ).prop("checked",false);
+						$( ".goalcheck" ).checkboxradio( "refresh" );
+						$(".measuring").css("box-shadow","none");
+						$(".ontarget").css("box-shadow","none");
+						$(".offtarget").css("box-shadow","none");
+						$(".department").css("box-shadow","none");
+						$(".strategic").css("box-shadow","none");
+
+						$('.strategic').buttonMarkup({ icon: "plus" });
+						$('.department').buttonMarkup({ icon: "plus" });
+						$('.offtarget').buttonMarkup({ icon: "plus" });
+						$('.ontarget').buttonMarkup({ icon: "plus" });
+						$('.measuring').buttonMarkup({ icon: "plus" });
+
+						o_selected = false;
+						d_selected = false;
+						m_selected = false;
+						of_selected = false;
+						s_selected = false;
+				});
+				// Select all goals in a dashboard
+				$(".category").click(function(e){
+					var checked = $( "input[type='checkbox']."+e["currentTarget"]["name"] ).is( ":checked" );
+					if(checked) {
+						$("input[type='checkbox']."+e["currentTarget"]["name"]).prop( "checked", false );
+					} else {
+						$("input[type='checkbox']."+e["currentTarget"]["name"]).prop( "checked", true );
+					}
+					$( ".goalcheck" ).checkboxradio( "refresh" );
+				});
+				// Select all OnTarget
+				var o_selected = false;
+				$(".ontarget").click(function(e){
+					if(!o_selected) {
+						$(".ontarget").css("box-shadow","0 0 12px #38c");
+						$('.ontarget').buttonMarkup({ icon: "minus" });
+						o_selected = true;
+					} else {
+						$(".ontarget").css("box-shadow","none");
+						$('.ontarget').buttonMarkup({ icon: "plus" });
+						o_selected = false;
+					}
+					for(i in m){
+							if(m[i]["ontarget"] === 1) {
+								var checked = $( "input[type='checkbox']#"+m[i]["id"] ).is( ":checked" );
+								if(checked) {
+									$("input[type='checkbox']#"+m[i]["id"]).prop( "checked", true );
+								} else {
+									$("input[type='checkbox']#"+m[i]["id"]).prop( "checked", true );
+								}
+							}
+					}
+					$( ".goalcheck" ).checkboxradio( "refresh" );
+				});
+				// Select all OffTarget
+				var of_selected = false;
+				$(".offtarget").click(function(e){
+					if(!of_selected) {
+						$(".offtarget").css("box-shadow","0 0 12px #38c");
+						$('.offtarget').buttonMarkup({ icon: "minus" });
+						of_selected = true;
+					} else {
+						$(".offtarget").css("box-shadow","none");
+						$('.offtarget').buttonMarkup({ icon: "plus" });
+						of_selected = false;
+					}
+					for(i in m){
+						if(m[i]["ontarget"] === 0) {
+							var checked = $( "input[type='checkbox']#"+m[i]["id"] ).is( ":checked" );
+							if(checked) {
+								$("input[type='checkbox']#"+m[i]["id"]).prop( "checked", true );
+							} else {
+								$("input[type='checkbox']#"+m[i]["id"]).prop( "checked", true );
+							}
+						}
+					}
+					$( ".goalcheck" ).checkboxradio( "refresh" );
+				});
+				// Select all Measuring Goals
+				var m_selected = false;
+				$(".measuring").click(function(e){
+					if(!m_selected) {
+						$(".measuring").css("box-shadow","0 0 12px #38c");
+						$('.measuring').buttonMarkup({ icon: "minus" });
+						m_selected = true;
+					} else {
+						$(".measuring").css("box-shadow","none");
+						$('.measuring').buttonMarkup({ icon: "plus" });
+						m_selected = false;
+					}
+					for(i in m){
+						if(m[i]["ontarget"] === 2) {
+							var checked = $( "input[type='checkbox']#"+m[i]["id"] ).is( ":checked" );
+							if(checked) {
+								$("input[type='checkbox']#"+m[i]["id"]).prop( "checked", true );
+							} else {
+								$("input[type='checkbox']#"+m[i]["id"]).prop( "checked", true );
+							}
+						}
+					}
+					$( ".goalcheck" ).checkboxradio( "refresh" );
+				});
+				// Select all Strategic Goals
+				var s_selected = false;
+				$(".strategic").click(function(e){
+					if(!s_selected) {
+						$(".strategic").css("box-shadow","0 0 12px #38c");
+						$('.strategic').buttonMarkup({ icon: "minus" });
+						s_selected = true;
+					} else {
+						$(".strategic").css("box-shadow","none");
+						$('.strategic').buttonMarkup({ icon: "plus" });
+						s_selected = false;
+					}
+					for(i in m){
+						if(m[i]["dashboard"].search("Strategic") > 0) {
+							var checked = $( "input[type='checkbox']#"+m[i]["id"] ).is( ":checked" );
+							if(checked) {
+								$("input[type='checkbox']#"+m[i]["id"]).prop( "checked", true );
+							} else {
+								$("input[type='checkbox']#"+m[i]["id"]).prop( "checked", true );
+							}
+						}
+					}
+					$( ".goalcheck" ).checkboxradio( "refresh" );
+				});
+				// Select all Department
+				var d_selected = false;
+				$(".department").click(function(e){
+					if(!d_selected) {
+						$(".department").css("box-shadow","0 0 12px #38c");
+						d_selected = true;
+					} else {
+						$(".department").css("box-shadow","none");
+						d_selected = false;
+					}
+					for(i in m){
+						if(m[i]["dashboard"].search("Department") > 0) {
+							var checked = $( "input[type='checkbox']#"+m[i]["id"] ).is( ":checked" );
+							if(checked) {
+								$("input[type='checkbox']#"+m[i]["id"]).prop( "checked", true );
+							} else {
+								$("input[type='checkbox']#"+m[i]["id"]).prop( "checked", true );
+							}
+						}
+					}
+					$( ".goalcheck" ).checkboxradio( "refresh" );
+				});
+				// Override the JQuery/Bootstrap mixup
+				$(".backtodash").click(function(){
+						$("#goalForm").submit();
+						window.location.href='../../index.html';
+					});
+				$(".logo").click(function(){
+						window.location.href='../../index.html';
+					});
+				// Refresh the goal data on Form Submit
+				$("#goalForm").submit(function(){
+					var formData = $("#goalForm").serializeArray();
+					console.log(formData);
+					var all = $( "input[type='checkbox']:checked" ).length == $( "input[type='checkbox']" ).length ? true : false;
+					var none = formData.length === 0 ? true : false;
+					if(all || none) {
+						var newGoals = cacheJS.get("data");
+						cacheJS.set("newData",newGoals,3600);
+					} else {
+						var newGoals = [];
+						for(i in formData) {
+							var dd = JSON.parse(decodeURIComponent(formData[i]['value']));
+							newGoals.push(dd);
+						}
+						cacheJS.set("newData",newGoals,3600);
+					}
+				});
+			});
+		</script>
+		<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="sidebar" data-background-color="white" data-active-color="danger">
+    <div class="sidebar-wrapper">
+              <div class="logo">
+  							<img src="../img/logo.png" />
+              </div>
+
+              <ul class="nav">
+                  <li class="active">
+                      <a class="backtodash" href="">
+                          <i class="ti-panel"></i>
+                          <p>Dashboard</p>
+                      </a>
+                  </li>
+  								<li id="events">
+  								</li>
+              </ul>
+      	</div>
+      </div>
+
+    <div class="main-panel">
+			<nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse">
+									<div class="col-md-10">
+										<button class="backtodash" data-role="button" data-icon="arrow-l">Save and Back to Dashboard</button>
+									</div>
+								</div>
+            </div>
+        </nav>
+
+        <div class="content">
+            <div class="container-fluid">
+							<button class="backtodashMobile backtodash" data-role="button" style="display:none" data-icon="arrow-l">Save and Back to Dashboard</button>
+							<form>
+								<input type="text" id="filterable" data-type="search" autocomplete="off">
+							</form>
+
+							<form action="javascript:void(0);" method="post" name="newGoals" id="goalForm">
+								<div class="row">
+									<div class="col-md-12" data-type="horizontal" data-role="controlgroup">
+										<a href="#" id="selectall" data-role="button" data-icon="plus">Select All</a>
+										<a href="#" id="selectsubset" data-role="button" data-icon="minus">Select None</a>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12" data-type="horizontal" data-role="controlgroup">
+										<p>Quick Filters</p>
+										<a href="#" class="ontarget" data-role="button" data-icon="plus">Select On Target Goals</a>
+										<a href="#" class="offtarget" data-role="button" data-icon="plus">Select Off Target Goals</a>
+										<a href="#" class="measuring" data-role="button" data-icon="plus">Select Measuring Goals</a>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12" data-type="horizontal" data-role="controlgroup">
+										<p></p>
+										<a href="#" class="department" data-role="button" data-icon="plus">Select Department Goals</a>
+										<a href="#" class="strategic" data-role="button" data-icon="plus">Select Strategic Goals</a>
+								</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12" id="blocks">
+									</div>
+								</div>
+								<script>
+								$(document).ready(function(){
+										$("#filtered").on( "filterablefilter", function( event, ui ) {
+													$(".category").hide()
+													$(".searchResults").collapsible("option","collapsed",false);
+													var numSearch = $('input[data-type="search"]').val()
+													if(numSearch.length === 0) {
+														$(".category").show();
+														$(".searchResults").collapsible("option","collapsed",true);
+													}
+											});
+										});
+
+								</script>
+							</form>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                    <ul>
+											<li>
+												<a href="https://socrata.com/solutions/performance-improvement-accountability/">Powered by Socrata</a>
+											</li>
+                    </ul>
+                </nav>
+								<div class="copyright pull-right">
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+</html>

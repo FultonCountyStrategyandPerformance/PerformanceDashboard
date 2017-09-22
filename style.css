@@ -1,0 +1,48 @@
+html, body {
+  height:100%;
+  width: 100%;
+  margin:0;
+}
+#container {
+  height:90%;
+  width: 100%;
+  margin:0;
+}
+#left {
+  overflow: hidden;
+  margin: 0;
+}
+#right {
+  float: right;
+  width: 80%;
+  margin: 0;
+}
+#header {
+  height:10%;
+  width: 100%;
+  margin:0;
+}
+#myCarousel {
+  width: 100%;
+  height:100%;
+  margin: 0;
+}
+.left.carousel-control {
+  background: linear-gradient(to right, #1F497D , white);
+}
+.right.carousel-control {
+  background: linear-gradient(to left, #1F497D , white);
+}
+.item {
+  text-align: center;
+  vertical-align: middle;
+}
+img {
+  margin: 0 auto;
+}
+.glyphicon.glyphicon-chevron-left {
+  display: none;
+}
+.glyphicon.glyphicon-chevron-right {
+  display: none;
+}
