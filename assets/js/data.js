@@ -522,7 +522,7 @@ data = {
       */
       function getMonths(eventsUrl) {
         months = [];
-        eventsUrl += "?$select=month, priority&$group=month, priority";
+        eventsUrl += "?$select=month, priority&$group=month, priority, sort_order&$where=display='Y'&$order=sort_order ASC";
         $.ajax({
             url: eventsUrl,
             async: false,
